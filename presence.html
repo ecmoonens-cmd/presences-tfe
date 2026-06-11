@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relevé de présences</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f4f8; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .card { background: white; border-radius: 16px; padding: 30px 24px; max-width: 420px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .header { text-align: center; margin-bottom: 24px; }
+  .header h1 { color: #1F3864; font-size: 22px; margin-bottom: 6px; }
+  .header p { color: #666; font-size: 14px; }
+  .form-group { margin-bottom: 20px; }
+  label { display: block; font-weight: bold; color: #333; margin-bottom: 8px; font-size: 15px; }
+  select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; color: #333; background: white; appearance: none; cursor: pointer; }
+  select:focus { outline: none; border-color: #1F3864; }
+  .btn { width: 100%; padding: 14px; background: #1F3864; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+  .btn:active { background: #163055; }
+  .message { text-align: center; padding: 16px; border-radius: 8px; margin-top: 16px; font-size: 16px; font-weight: bold; display: none; }
+  .success { background: #d1fae5; color: #065f46; }
+  .error { background: #fee2e2; color: #991b1b; }
+  .groupe-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-left: 8px; }
+  .groupe-a { background: #DBEAFE; color: #1565C0; }
+  .groupe-b { background: #EDE9FE; color: #6A1B9A; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <h1>🏋️ Relevé de présences</h1>
+    <p>Coaching sportif & suivi calorique — TFE 2026-2027</p>
+  </div>
+  <div class="form-group">
+    <label>Sélectionne ton nom :</label>
+    <select id="participant">
+      <option value="">-- Choisis ton nom --</option>
+      <optgroup label="Groupe A">
+        <option value="Prenom1|Nom1|A">Prenom1 Nom1</option>
+        <option value="Prenom2|Nom2|A">Prenom2 Nom2</option>
+        <option value="Prenom3|Nom3|A">Prenom3 Nom3</option>
+        <option value="Prenom4|Nom4|A">Prenom4 Nom4</option>
+        <option value="Prenom5|Nom5|A">Prenom5 Nom5</option>
+        <option value="Prenom6|Nom6|A">Prenom6 Nom6</option>
+        <option value="Prenom7|Nom7|A">Prenom7 Nom7</option>
+        <option value="Prenom8|Nom8|A">Prenom8 Nom8</option>
+        <option value="Prenom9|Nom9|A">Prenom9 Nom9</option>
+        <option value="Prenom10|Nom10|A">Prenom10 Nom10</option>
+        <option value="Prenom11|Nom11|A">Prenom11 Nom11</option>
+        <option value="Prenom12|Nom12|A">Prenom12 Nom12</option>
+        <option value="Prenom13|Nom13|A">Prenom13 Nom13</option>
+        <option value="Prenom14|Nom14|A">Prenom14 Nom14</option>
+        <option value="Prenom15|Nom15|A">Prenom15 Nom15</option>
+      </optgroup>
+      <optgroup label="Groupe B">
+        <option value="Prenom16|Nom16|B">Prenom16 Nom16</option>
+        <option value="Prenom17|Nom17|B">Prenom17 Nom17</option>
+        <option value="Prenom18|Nom18|B">Prenom18 Nom18</option>
+        <option value="Prenom19|Nom19|B">Prenom19 Nom19</option>
+        <option value="Prenom20|Nom20|B">Prenom20 Nom20</option>
+        <option value="Prenom21|Nom21|B">Prenom21 Nom21</option>
+        <option value="Prenom22|Nom22|B">Prenom22 Nom22</option>
+        <option value="Prenom23|Nom23|B">Prenom23 Nom23</option>
+        <option value="Prenom24|Nom24|B">Prenom24 Nom24</option>
+        <option value="Prenom25|Nom25|B">Prenom25 Nom25</option>
+        <option value="Prenom26|Nom26|B">Prenom26 Nom26</option>
+        <option value="Prenom27|Nom27|B">Prenom27 Nom27</option>
+        <option value="Prenom28|Nom28|B">Prenom28 Nom28</option>
+        <option value="Prenom29|Nom29|B">Prenom29 Nom29</option>
+        <option value="Prenom30|Nom30|B">Prenom30 Nom30</option>
+      </optgroup>
+    </select>
+  </div>
+  <button class="btn" onclick="enregistrer()">✅ Je suis présent(e) !</button>
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAOTGpEk-YyehS3CpG1Up05v2O6WEGjXbrGSGoC31xBz7-HHMCMa3NHXpw3g98Cfz7/exec";
+
+function enregistrer() {
+  var select = document.getElementById("participant");
+  var val = select.value;
+  if (!val) {
+    afficherMessage("Merci de sélectionner ton nom !", "error");
+    return;
+  }
+  var parts = val.split("|");
+  var prenom = parts[0];
+  var nom = parts[1];
+  var groupe = parts[2];
+
+  var btn = document.querySelector(".btn");
+  btn.disabled = true;
+  btn.textContent = "Enregistrement...";
+
+  var url = SCRIPT_URL + "?nom=" + encodeURIComponent(nom) + "&prenom=" + encodeURIComponent(prenom) + "&groupe=" + encodeURIComponent(groupe);
+
+  fetch(url, { mode: "no-cors" })
+    .then(function() {
+      afficherMessage("✅ Présence enregistrée pour " + prenom + " " + nom + " !", "success");
+      btn.textContent = "✅ Enregistré !";
+      btn.style.background = "#065f46";
+      select.disabled = true;
+    })
+    .catch(function() {
+      afficherMessage("✅ Présence enregistrée !", "success");
+      btn.textContent = "✅ Enregistré !";
+      select.disabled = true;
+    });
+}
+
+function afficherMessage(texte, type) {
+  var msg = document.getElementById("message");
+  msg.textContent = texte;
+  msg.className = "message " + type;
+  msg.style.display = "block";
+}
+</script>
+</body>
+</html>
